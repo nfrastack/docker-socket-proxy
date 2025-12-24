@@ -1,3 +1,9 @@
+## 1.3.2 2025-12-23 <code at nfastack dot com>
+
+   ### Changed
+      - Switch to Alpine 3.23 base
+
+
 ## 1.3.1 2025-09-11 <code at nfrastack dot com>
 
    ### Changed
