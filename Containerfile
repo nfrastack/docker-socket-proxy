@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+# SPDX-FileCopyrightText: © 2026 Nfrastack <code@nfrastack.com>
 #
 # SPDX-License-Identifier: MIT
 
@@ -22,22 +22,24 @@ COPY LICENSE /usr/src/container/LICENSE
 COPY README.md /usr/src/container/README.md
 
 ENV \
-        NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
-        NGINX_ENABLE_CLIENT_CACHE=NONE \
-        NGINX_SITE_ENABLED=docker-socket-proxy \
-        NGINX_USER=root \
-        NGINX_LISTEN_PORT=2375 \
-        NGINX_LOG_ACCESS_FILE=access.log \
-        NGINX_LOG_ACCESS_LOCATION=/logs \
-        NGINX_LOG_BLOCKED_FILE=/null \
-        NGINX_LOG_BLOCKED_LOCATION=/dev \
-        NGINX_LOG_ERROR_FILE=error.log \
-        NGINX_LOG_ERROR_LOCATION=/logs \
-        NGINX_WORKER_PROCESSES=1 \
-        IMAGE_NAME="nfrastack/docker-socket-proxy" \
-        IMAGE_REPO_URL="https://github.com/nfrastack/docker-socket-proxy/"
+    IMAGE_NAME="nfrastack/docker-socket-proxy" \
+    IMAGE_REPO_URL="https://github.com/nfrastack/docker-socket-proxy/"
 
 RUN echo "" && \
+    BUILD_ENV=" \
+                NGINX_SITE_ENABLED=socket-proxy \
+                NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
+                NGINX_ENABLE_CLIENT_CACHE=NONE \
+                NGINX_LISTEN_PORT=2375 \
+                NGINX_USER=root \
+                NGINX_LOG_ACCESS_FILE=access.log \
+                NGINX_LOG_ACCESS_LOCATION=/logs \
+                NGINX_LOG_BLOCKED_FILE=/null \
+                NGINX_LOG_BLOCKED_LOCATION=/dev \
+                NGINX_LOG_ERROR_FILE=error.log \
+                NGINX_LOG_ERROR_LOCATION=/logs \
+              " \
+              && \
     source /container/base/functions/container/build && \
     container_build_log image && \
     package update && \

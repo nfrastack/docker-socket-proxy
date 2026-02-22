@@ -1,106 +1,106 @@
-# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+# SPDX-FileCopyrightText: © 2026 Nfrastack <code@nfrastack.com>
 #
 # SPDX-License-Identifier: MIT
 
 socketproxy_configure_nginx() {
-    sed -i "s|\$http_x_forwarded_for|\$remote_addr|g" /etc/nginx/snippets/server.available/logging.conf
+    sed -i "s|\$http_x_forwarded_for|\$remote_addr|g" /etc/nginx/server.conf.d/http/log_formats.conf
 
-    update_template /etc/nginx/sites.available/docker-socket-proxy.conf \
-                                                                        DOCKER_SOCKET_URI
-    update_template /etc/nginx/templates/proxy_pass.template \
-                                                                TIMEOUT_CONNECT \
-                                                                TIMEOUT_READ \
-                                                                TIMEOUT_SEND
-    print_notice "Connection Timeout: ${TIMEOUT_CONNECT}"
-    print_notice "Read Timeout: ${TIMEOUT_READ}"
-    print_notice "Send Timeout: ${TIMEOUT_SEND}"
+    update_template /container/data/nginx/sites.available/socket-proxy/server-pre/50-upstream-docker_socket.conf \
+                                                                                                                    DOCKER_SOCKET_URI
+    update_template /container/data/nginx/sites.available/socket-proxy/templates/proxy_pass.template \
+                                                                                                        TIMEOUT_CONNECT \
+                                                                                                        TIMEOUT_READ \
+                                                                                                        TIMEOUT_SEND
+    print_notice "[docker-socket] Setting Connection Timeout: ${TIMEOUT_CONNECT}"
+    print_notice "[docker-socket] Setting Read Timeout: ${TIMEOUT_READ}"
+    print_notice "[docker-socket] Setting Send Timeout: ${TIMEOUT_SEND}"
 
     allowed_ip=$(echo "${ALLOWED_IPS}" | tr "," "\n")
     for allowed_ip in ${allowed_ip}; do
             print_notice "Allowing IP: ${allowed_ip}"
-            ip_allow="$(echo ${ip_allow} ; cat <<EOF
-                allow ${allowed_ip};
+            ip_allow="$(echo "${ip_allow}" ; cat <<EOF
+        allow ${allowed_ip};
 EOF
         )"
     done
     ip_allow=$(echo $ip_allow | uniq)
-
+    location_block_file=/container/data/nginx/sites.available/socket-proxy/location/10-docker_socket_proxy.conf
     if var_true "${API_ENABLE_AUTH}" ; then
-        sed -i "/location ~ \/auth {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/auth {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_BUILD}" ; then
-        sed -i "/location ~ \/build {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/build {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_COMMIT}" ; then
-        sed -i "/location ~ \/commit {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/commit {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_CONFIGS}" ; then
-        sed -i "/location ~ \/configs {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/configs {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_CONTAINERS}" ; then
-        sed -i "/location ~ \/containers {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/containers {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_DISTRIBUTION}" ; then
-        sed -i "/location ~ \/distribution {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/distribution {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_EVENTS}" ; then
-        sed -i "/location ~ \/events {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/events {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_EXEC}" ; then
-        sed -i "/location ~ \/exec {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/exec {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_GRPC}" ; then
-        sed -i "/location ~ \/grpc {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/grpc {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_IMAGES}" ; then
-        sed -i "/location ~ \/images {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/images {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_INFO}" ; then
-        sed -i "/location ~ \/info {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/info {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_NETWORKS}" ; then
-        sed -i "/location ~ \/networks {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/networks {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_NODES}" ; then
-        sed -i "/location ~ \/nodes {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/nodes {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_PING}" ; then
-        sed -i "/location ~ \/_ping {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/_ping {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_PLUGINS}" ; then
-        sed -i "/location ~ \/plugins {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/plugins {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_POST}" ; then
-        sed -i "/location ~ \/post {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/post {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_SECRETS}" ; then
-        sed -i "/location ~ \/secrets {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/secrets {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_SERVICES}" ; then
-        sed -i "/location ~ \/services {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/services {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_SESSION}" ; then
-        sed -i "/location ~ \/session {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/session {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_SWARM}" ; then
-        sed -i "/location ~ \/swarm {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/swarm {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_SYSTEM}" ; then
-        sed -i "/location ~ \/system {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/system {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_TASKS}" ; then
-        sed -i "/location ~ \/tasks {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/tasks {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_VERSION}" ; then
-        sed -i "/location ~ \/version {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/version {/a\        ${ip_allow}" "${location_block_file}"
     fi
     if var_true "${API_ENABLE_VOLUMES}" ; then
-        sed -i "/location ~ \/volumes {/a\                ${ip_allow}" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "/location ~ \/volumes {/a\        ${ip_allow}" "${location_block_file}"
     fi
 
     if var_true "${ENABLE_READONLY}" ; then
         print_notice "Enabling Read Only access to socket (GET)"
-        sed -i "s|GET POST|GET|g" /etc/nginx/sites.available/docker-socket-proxy.conf
+        sed -i "s|GET POST|GET|g" "${location_block_file}"
     else
         print_notice "Enabling Read-Write access to socket (GET | POST)"
     fi
