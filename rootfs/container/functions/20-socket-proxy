@@ -5,9 +5,9 @@
 socketproxy_configure_nginx() {
     sed -i "s|\$http_x_forwarded_for|\$remote_addr|g" /etc/nginx/server.conf.d/http/log_formats.conf
 
-    update_template /container/data/nginx/sites.available/socket-proxy/server-pre/50-upstream-docker_socket.conf \
+    update_template /container/data/nginx/sites.available/socket_proxy/server-pre/50-upstream-docker_socket.conf \
                                                                                                                     DOCKER_SOCKET_URI
-    update_template /container/data/nginx/sites.available/socket-proxy/templates/proxy_pass.template \
+    update_template /container/data/nginx/sites.available/socket_proxy/templates/proxy_pass.template \
                                                                                                         TIMEOUT_CONNECT \
                                                                                                         TIMEOUT_READ \
                                                                                                         TIMEOUT_SEND
@@ -24,7 +24,7 @@ EOF
         )"
     done
     ip_allow=$(echo $ip_allow | uniq)
-    location_block_file=/container/data/nginx/sites.available/socket-proxy/location/10-docker_socket_proxy.conf
+    location_block_file=/container/data/nginx/sites.available/socket_proxy/location/10-docker_socket_proxy.conf
     if var_true "${API_ENABLE_AUTH}" ; then
         sed -i "/location ~ \/auth {/a\        ${ip_allow}" "${location_block_file}"
     fi

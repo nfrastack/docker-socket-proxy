@@ -1,3 +1,9 @@
+## 1.3.3 2026-03-08 <code at nfastack dot com>
+
+   ### Changed
+      - Support nfrastack/nginx:8.x.x features
+
+
 ## 1.3.2 2025-12-23 <code at nfastack dot com>
 
    ### Changed

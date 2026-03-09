@@ -27,8 +27,8 @@ ENV \
 
 RUN echo "" && \
     BUILD_ENV=" \
-                NGINX_SITE_ENABLED=socket-proxy \
-                NGINX_ENABLE_CREATE_SAMPLE_HTML=FALSE \
+                NGINX_SITE_ENABLED=socket_proxy \
+                NGINX_CREATE_SAMPLE_HTML=FALSE \
                 NGINX_ENABLE_CLIENT_CACHE=NONE \
                 NGINX_LISTEN_PORT=2375 \
                 NGINX_USER=root \

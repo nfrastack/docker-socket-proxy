@@ -1,7 +1,7 @@
 services:
-  socket-proxy-app:
-    image: nfrastack/docker-socket-proxy:latest
-    container_name: docker-socket-proxy-app
+  socket-proxy:
+    image: docker.io/nfrastack/docker-socket-proxy:latest
+    container_name: docker-socket-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
