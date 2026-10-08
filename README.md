@@ -113,9 +113,9 @@ Below is the complete list of available options that can be used to customize yo
 | `DOCKER_SOCKET_URI` | How to connect to the docker socket inside the container                               | `unix:/var/run/docker.sock` |          |
 | `ENABLE_READONLY`   | Enable Read Only Mode (`GET`) otherwise allow Read-Write(`GET POST`)                   | `TRUE`                      |          |
 | `MODE`              | Proxying Mode - Allow access to endpoints                                              |                             |          |
-|                     | Endpoint list:                                                                         |                             |
+|                     | Endpoint list:                                                                         |                             |          |
 |                     | [https://docs.docker.com/engine/api/v1.41/](https://docs.docker.com/engine/api/v1.41/) |                             |          |
-|                     | Pre Made:                                                                              |                             |
+|                     | Pre Made:                                                                              |                             |          |
 |                     | `NONE` (none at all), `DEFAULT` (events,ping,version), `ALL` (All of them)             |                             |          |
 |                     | or individual endpoints, seperated by commas                                           | `DEFAULT`                   |          |
 |                     | `AUTH` /auth                                                                           |                             |          |
@@ -144,6 +144,17 @@ Below is the complete list of available options that can be used to customize yo
 | `TIMEOUT_CONNECT`   | Timeout for initial connection to docker socket                                        | `10s`                       |          |
 | `TIMEOUT_READ`      | Read timeout to docker socket if no activity                                           | `86400s`                    |          |
 | `TIMEOUT_SEND`      | Send timeout to docker socket if no activity                                           | `86400s`                    |          |
+
+#### Authentication
+| Parameter                          | Description                                                    | Default        | Advanced | 
+| ---------------------------------- | -------------------------------------------------------------- |--------------- | -------- |
+| `NGINX_AUTHENTICATION_TYPE`        | Site authentication (`NONE` or `BASIC`)                        | `NONE`         |          |
+| `NGINX_AUTHENTICATION_TITLE`       | Realm title shown on the basic auth prompt                     | `Please login` |          |
+| `NGINX_AUTHENTICATION_BASIC_USER1` | Basic auth username (add `USERn`/`PASSn` pairs for more users) |                | x        |
+| `NGINX_AUTHENTICATION_BASIC_PASS1` | Basic auth password (`PASSn_FILE` variants read from a file)   |                | x        |
+
+>
+>> Authentication uses the nginx base image standard site authentication When `NGINX_AUTHENTICATION_TYPE=BASIC` with at least one user configured, every proxied endpoint additionally requires HTTP basic auth on top of `ALLOWED_IPS` and `ENABLE_READONLY`. With the default `NONE`, the proxy requires no authentication.
 
 ### Networking
 

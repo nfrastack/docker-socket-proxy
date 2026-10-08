@@ -9,8 +9,8 @@ FROM ${BASE_IMAGE}
 
 LABEL \
         org.opencontainers.image.title="Docker Socket Proxy" \
-        org.opencontainers.image.description="Protect your docker socket with a HTTP barrier" \
-        org.opencontainers.image.url="https://hub.docker.com/r/nfrastack/nginx" \
+        org.opencontainers.image.description="Protect your docker socket with a HTTP authenticated barrier" \
+        org.opencontainers.image.url="https://hub.docker.com/r/nfrastack/docker-socket-proxy" \
         org.opencontainers.image.documentation="https://github.com/nfrastack/docker-socket-proxy/blob/main/README.md" \
         org.opencontainers.image.source="https://github.com/nfrastack/docker-socket-proxy.git" \
         org.opencontainers.image.authors="Nfrastack <code@nfrastack.com>" \

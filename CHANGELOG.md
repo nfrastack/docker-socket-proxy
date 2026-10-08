@@ -1,3 +1,9 @@
+## 1.3.4 2026-10-08 <code at nfrastack dot com>
+
+   ### Added
+      - Alpine 3.24
+
+
 ## 1.3.3 2026-03-08 <code at nfastack dot com>
 
    ### Changed
